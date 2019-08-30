@@ -1,0 +1,51 @@
+var express = require('express');
+var router = express.Router();
+var fs = require('fs');
+var path = require('path');
+var route_dir = path.resolve(__dirname,'');
+const init = (server)=>{
+
+    // merge Routes //
+   
+    
+    fs.readdirSync(route_dir,{withFileTypes:true}).forEach((fd)=>{
+
+        if(fd.isDirectory())
+        {
+            readAssignToRouter(router_dir fd.name)
+        }
+        
+
+    });
+
+   
+}
+
+const readAssignToRouter = (dirPath)=>{
+
+    
+
+    fs.readdirSync(dirPath,{withFileTypes:true}).forEach((fd)=>{
+        
+        console.log(fd.isDirectory())
+
+        var allRoutes = [];
+            allRoutes[file] = require(route_dir+"/"+filename);
+            server.use('/api',allRoutes[file])
+                
+            
+       
+            
+
+    });
+    
+
+}
+
+init();
+
+//module.exports = init;
+
+
+
+

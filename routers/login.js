@@ -1,7 +1,11 @@
 var welcome = require('../controllers/welcome');
+var express = require('express');
+var router = express.Router();
 
-// Routes //
-module.exports = (router)=>{
-    router.get('/login',welcome.index);
-};
+router.get('/login',welcome.index);
+
+module.exports = router;
+
+
+
 

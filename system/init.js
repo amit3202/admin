@@ -4,12 +4,19 @@ const {PORT,VIEWENGINE} =  require('../config/config');
 const db = require('../config/database');
 const path = require('path') 
 
+//Initialise session //
+const initSession = require('./session/session');
+initSession(app);
+
+// initialise Passport //
+const initPassport = require('./passport/passport');
+initPassport(app)
+
 //import Routes //
 const initRoutes = require('../routers/route');
 initRoutes(app);
 
 // Initialisng View Engine //
-
 const initialiseViewEngine = ()=>{
 
     // Set Paths For views //
@@ -26,7 +33,7 @@ const initServer = ()=>{
     app.listen(PORT,(err)=>{
 
         if(err){
-            console.log('Error in server : ' +err)
+            console.log('Error in server 11242 : ' +err)
         }else{
             console.log('Server runnning on Port '+PORT)
             initialiseViewEngine();

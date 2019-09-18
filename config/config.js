@@ -1,7 +1,7 @@
 const config = {
     PORT : '3202',
     DBNAME : 'schools',
-    VIEWENGINE : 'hbs' 
+    VIEWENGINE : 'ejs' 
 }
 module.exports = config;
 

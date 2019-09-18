@@ -3,6 +3,7 @@ const app = new express();
 const {PORT,VIEWENGINE} =  require('../config/config');
 const db = require('../config/database');
 const path = require('path') 
+const expressLayouts = require('express-ejs-layouts');
 
 //Initialse System Middlewares //
 const systemMidlleware = require('./middleware/system');
@@ -23,9 +24,6 @@ initSession(app);
 const initPassport = require('./passport/passport');
 initPassport(app)
 
-//import Routes //
-const initRoutes = require('../routers/route');
-initRoutes(app);
 
 // Initialisng View Engine //
 const initialiseViewEngine = ()=>{
@@ -33,10 +31,19 @@ const initialiseViewEngine = ()=>{
     // Set Paths For views & Static server //
     console.log(path.join(__dirname,"../assets"))
     app.use(express.static(path.join(__dirname,"../public")))
-    app.set("views", path.join(__dirname, "../views"));    
+    app.use(expressLayouts)
+    app.set("views", path.join(__dirname, "../templates/views/"));    
+    app.set('layout', 'layouts/admin/defaultLayout');
     app.set('view engine',VIEWENGINE);
     console.log('View engine '+VIEWENGINE+" initalised")
 }
+initialiseViewEngine();
+
+//import Routes //
+const initRoutes = require('../routers/route');
+initRoutes(app);
+
+
 
 const initServer = ()=>{
 
@@ -48,7 +55,6 @@ const initServer = ()=>{
             console.log('Error in server 11242 : ' +err)
         }else{
             console.log('Server runnning on Port '+PORT)
-            initialiseViewEngine();
         }
     
     })

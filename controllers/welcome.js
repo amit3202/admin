@@ -1,4 +1,4 @@
-var user = require('../models/user');
+var user = require('../models/admin/users');
 module.exports = {
     index : (req,res)=>{
 
@@ -7,8 +7,7 @@ module.exports = {
         //     console.log(res)
 
         // })
-
-        res.render('index')
-
+        
+        
     }
 }

@@ -1,3 +1,5 @@
+var dotenv = require('dotenv');
+dotenv.config();
 const systemMidlleware = (server) => {
 
 
@@ -29,8 +31,14 @@ const systemMidlleware = (server) => {
 
 
         securedCheck: (req, res, next) => {
+        
+            next();
 
-            console.log(' securedCheck Middleware');
+        },
+
+        setSystemParameters : (req,res,next)=>{
+
+            res.locals.sitename = process.env.SITENAME;
             next();
 
         }

@@ -3,5 +3,10 @@ const config = {
     DBNAME : 'schools',
     VIEWENGINE : 'ejs' 
 }
+const emailType = {
+
+    
+
+}
 module.exports = config;
 

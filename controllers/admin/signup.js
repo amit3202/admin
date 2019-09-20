@@ -1,4 +1,5 @@
 var user = require('../../models/admin/users');
+var mailer = require('../../helper/mailer')
 module.exports = {
     index : (req,res)=>{
 
@@ -29,6 +30,7 @@ module.exports = {
 
         }).then((data)=>{
 
+            mailer();    
             return data;
             
         }).then((data)=>{

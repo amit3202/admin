@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.Router();
+var errorRoute = require('./error');
 var fs = require('fs');
 var path = require('path');
 var route_dir = path.resolve(__dirname,'./');
@@ -28,7 +28,7 @@ const init = (server)=>{
                 }else{
                     
                 var file = fd.name.substring(0,fd.name.indexOf("."));
-                if(file != 'route'){
+                if(file != 'route' && file != 'error'){
 
                 path_array.push({dir : route_dir.replace(route_path,''),name : fd.name});
                 
@@ -45,13 +45,17 @@ const init = (server)=>{
         }
     ],(err,res)=>{
 
-        res.map((data)=>{
+       async.map(res,(data)=>{
             
             
             let route = require(route_path+data.dir+"/"+data.name);
             server.use(data.dir,route)
             
         })
+
+        server.use('*',errorRoute);
+
+
 
     })  
    

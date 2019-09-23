@@ -11,11 +11,21 @@ var userSchema = new Schema({
         city : String,
         country : String
     },
-    status : {
-        type : String,
-        enum : ['active','inactive'],
-        default : 'active'
-     },
+    activation : {
+        status : {
+            type : String,
+            enum : ['active','inactive'],
+            default : 'inactive'
+         },
+         code : String,
+         validUpto : {
+             type : Date
+            },
+        validOn : {
+            type : Date,
+            default : null
+            }
+    },
     created_at : {
         type : Date,
         default : Date.now

@@ -1,12 +1,52 @@
-var nodemailer = require('nodemailer')
-const mailer = () => {
+var nodemailer = require('nodemailer');
+var emailTemplate = require('../models/emailTemplate');
+const mailer = (mailType,userData) => {
 
     
 
-    sendMail()
+    new Promise((res,rej)=>{
+
+        console.log(mailType,userData);
+
+        
+            let template  = emailTemplate.find().exec((err,docs)=>{
+                    if(docs)
+                    {
+                        let mailData = {
+                            subject : docs.subject,
+                            template : docs.template.replace('[ACTIVATIONURL]','http://google.com'),
+                            from : docs.from,
+                            to : userData.email
+                        };
+                        
+                        res(mailData)
+                    }
+                    else{
+                        rej(err)
+                        }
+                    }
+                )
+            
+
+        
+       
+
+
+    }).then((data)=>{
+        
+        sendMail(data)
+        
+    }).catch((err)=>{
+
+        console.log(err)
+
+    })
+
+   
+    
 }
 
-const sendMail = () => {
+const sendMail = (maildata) => {
     
     (async ()=>{
         let transporter = nodemailer.createTransport({
@@ -21,11 +61,11 @@ const sendMail = () => {
     
         // send mail with defined transport object
         let info = await transporter.sendMail({
-            from: '"Fred Foo 👻" <code3202@gmail.com>', // sender address
-            to: 'amit@yopmail.com', // list of receivers
-            subject: 'Hello ✔', // Subject line
-            text: 'Hello world ?', // plain text body
-            html: '<b>Hello world?</b>' // html body
+            from: maildata.from, // sender address
+            to: maildata.to, // list of receivers
+            subject: maildata.subject, // Subject line
+           // text: 'Hello world ?', // plain text body
+            html: maildata.template // html body
         });
     
         console.log('Message sent: %s', info.messageId);

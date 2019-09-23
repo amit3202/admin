@@ -1,5 +1,7 @@
 var user = require('../../models/admin/users');
-var mailer = require('../../helper/mailer')
+var mailer = require('../../helper/mailer');
+var cnt = require('../../config/constant');
+var addDays = require('date-fns/addDays');
 module.exports = {
     index : (req,res)=>{
 
@@ -12,25 +14,37 @@ module.exports = {
                 'personal.country' : req.input('country'),
                 'username': req.input('username'),
                 'email':req.input('email'),
-                'password' : req.input('password')
-                });
-
-                if(newUser.save())
-                {   
-                    resolve({
-                        success:'ok',
-                        email : req.input('email'),
-                        fullname:req.input('fullname')
+                'password' : req.input('password'),
+                'activation.code' : 'sdfshdgf',
+                'activation.validUpto' : addDays(new Date(),1)
                     });
-                    
-                }else{
-                    reject({success:'no'})
-                }
+
+                    (async ()=>{
+
+                        var savedUser = await newUser.save();
+                        if(savedUser.id){
+
+                            resolve({
+                                success:'ok',
+                                email : savedUser.email,
+                                fullname: savedUser.personal.fullname,
+                                activation : savedUser.activation
+                            });
+
+                        }else{
+                            reject({success:'no'}) 
+                        }   
+                        
+
+                    })().catch((err)=>{
+                        console.log(err)
+                        reject({success:'no'})
+                    })
 
 
         }).then((data)=>{
 
-            mailer();    
+            mailer(cnt.SIGNUPVERIFICATION,data);    
             return data;
             
         }).then((data)=>{

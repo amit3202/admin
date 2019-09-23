@@ -1,6 +1,6 @@
 const express = require('express');
 const app = new express();
-const {PORT,VIEWENGINE} =  require('../config/config');
+const {PORT,VIEWENGINE} =  require('../config/constant');
 const db = require('../config/database');
 const path = require('path') 
 const expressLayouts = require('express-ejs-layouts');

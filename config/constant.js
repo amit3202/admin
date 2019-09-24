@@ -1,8 +1,13 @@
 const config = {
     PORT : '3202',
     DBNAME : 'schools',
-    VIEWENGINE : 'ejs' 
+    VIEWENGINE : 'ejs',
 }
+
+const systemConfig = {
+    SITEURL : 'http://localhost:'+config.PORT 
+}
+
 const emailType = {
 
     SIGNUPVERIFICATION : 'signupVerification'
@@ -10,5 +15,5 @@ const emailType = {
 }
 
 
-module.exports = Object.assign(config,emailType);
+module.exports = Object.assign(config,emailType,systemConfig);
 

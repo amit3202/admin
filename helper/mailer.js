@@ -1,15 +1,16 @@
 var nodemailer = require('nodemailer');
 var emailTemplate = require('../models/emailTemplate');
+var genhelper = require('../helper/general');
 const mailer = (mailType,userData) => {
 
     
 
     new Promise((res,rej)=>{
 
-        console.log(mailType,userData);
+            let template  = emailTemplate.find().exec((err,result)=>{
 
-        
-            let template  = emailTemplate.find().exec((err,docs)=>{
+                    let docs  = result[0];
+
                     if(docs)
                     {
                         let mailData = {
@@ -18,7 +19,8 @@ const mailer = (mailType,userData) => {
                             from : docs.from,
                             to : userData.email
                         };
-                        
+
+                       
                         res(mailData)
                     }
                     else{
@@ -67,7 +69,7 @@ const sendMail = (maildata) => {
            // text: 'Hello world ?', // plain text body
             html: maildata.template // html body
         });
-    
+        
         console.log('Message sent: %s', info.messageId);
         // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
     

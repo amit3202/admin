@@ -29,7 +29,6 @@ initPassport(app)
 const initialiseViewEngine = ()=>{
 
     // Set Paths For views & Static server //
-    console.log(path.join(__dirname,"../assets"))
     app.use(express.static(path.join(__dirname,"../public")))
     app.use(expressLayouts)
     app.set("views", path.join(__dirname, "../templates/views/"));    

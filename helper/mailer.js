@@ -13,9 +13,10 @@ const mailer = (mailType,userData) => {
 
                     if(docs)
                     {
+                        let activationUrl = genhelper.getEmailValidationUrl(userData.activation.code,userData.email);
                         let mailData = {
                             subject : docs.subject,
-                            template : docs.template.replace('[ACTIVATIONURL]','http://google.com'),
+                            template : docs.template.replace('[ACTIVATIONURL]',activationUrl),
                             from : docs.from,
                             to : userData.email
                         };

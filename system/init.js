@@ -42,7 +42,9 @@ initialiseViewEngine();
 const initRoutes = require('../routers/route');
 initRoutes(app);
 
-
+// Error Handler
+const initErrorHandler = require('./error/error');
+initErrorHandler(app);
 
 const initServer = ()=>{
 

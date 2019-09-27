@@ -1,9 +1,14 @@
 module.exports = {
 
-    index : (req,res)=>{
+    pagenotfound : (req,res,next)=>{
 
-        res.render('error',{layout : 'layouts/errorLayout'})        
-
+       try {
+            throw new Error('Page Not found');
+       } catch (error) {
+        error.httpStatusCode = 400
+        return next(error)
+          }
+        
     }
 
 }

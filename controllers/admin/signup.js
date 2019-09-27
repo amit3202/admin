@@ -6,7 +6,7 @@ const {validationResult} = require('express-validator');
 const genhelper = require('../../helper/general');
 const _ = require('lodash');
 module.exports = {
-    index : (req,res)=>{
+    index : (req,res,next)=>{
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
           
@@ -42,27 +42,27 @@ module.exports = {
                     'activation.validUpto' : addDays(new Date(),1)
                         });
     
-                        (async ()=>{
-    
-                            var savedUser = await newUser.save();
-                            if(savedUser.id){
-    
-                                resolve({
-                                    success:'ok',
-                                    email : savedUser.email,
-                                    fullname: savedUser.personal.fullname,
-                                    activation : savedUser.activation
-                                });
-    
-                            }else{
-                                reject({success:'no'}) 
-                            }   
-                            
-    
-                        })().catch((err)=>{
-                            console.log(err)
-                            reject({success:'no'})
-                        })
+                            (async ()=>{
+        
+                                var savedUser = await newUser.save();
+                                if(savedUser.id){
+        
+                                    resolve({
+                                        success:'ok',
+                                        email : savedUser.email,
+                                        fullname: savedUser.personal.fullname,
+                                        activation : savedUser.activation
+                                    });
+        
+                                }else{
+                                    reject({success:'no'}) 
+                                }   
+                                
+        
+                            })().catch((err)=>{
+                                err.httpStatusCode = 500
+                                return next(err)
+                            })
     
     
             }).then((data)=>{

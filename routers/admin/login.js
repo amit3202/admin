@@ -5,6 +5,7 @@ var express = require('express');
 var router = express.Router();
 
 router.get(['/','/login'],loginController.index);
-router.post('/signup',signupValidationRules,signupController.index);
+router.post('/signup',signupController.index);
+//router.post('/signup',signupValidationRules,signupController.index);
 
 module.exports = router;

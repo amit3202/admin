@@ -71,8 +71,8 @@ module.exports = {
                 return data;
                 
             }).then((data)=>{
-    
-                res.send(data);
+                
+                res.render('common/activationemailSent',{layout : 'layouts/errorLayout',data})
     
             }).catch((data)=>{
     

@@ -13,7 +13,7 @@ module.exports = (server)=>{
                 err : err
             }
         } 
-        res.status(err.httpStatusCode).render('error',{layout : 'layouts/errorLayout',data:data[err.httpStatusCode]})
+        res.status(err.httpStatusCode!=undefined?err.httpStatusCode:'500').render('error',{layout : 'layouts/errorLayout',data:data[err.httpStatusCode!=undefined?err.httpStatusCode:'500']})
     })
 
 };

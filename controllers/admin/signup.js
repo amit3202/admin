@@ -60,6 +60,7 @@ module.exports = {
                                 
         
                             })().catch((err)=>{
+                                
                                 err.httpStatusCode = 500
                                 return next(err)
                             })

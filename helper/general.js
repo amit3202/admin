@@ -3,7 +3,7 @@ const Cryptr = require('cryptr')
 const general = {
     
     siteURL(path){
-        return cnt.SITEURL+"/"+path;
+        return cnt.SITEURL+path;
     },
     getEmailValidationUrl(code,email){
 

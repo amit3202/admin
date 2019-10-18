@@ -1,19 +1,20 @@
 var mongoose =  require('mongoose');
-module.exports = mongoose.model('menus',new mongoose.Schema({
+const Schema = mongoose.Schema;
+const menuSchema = Schema({
+    
+    title  : String,
+    icon : {
+        type : String,
+        default : null
+    },
+    parent : {
+        type : Schema.Types.ObjectId,
+    },
+    status : String,
+    deleted_at : {
+        type: Date,
+        default : null
+    }
 
-        title  : String,
-        icon : {
-            type : String,
-            default : null
-        },
-        parent : {
-            type : String,
-            default : null
-        },
-        status : String,
-        deleted_at : {
-            type: Date,
-            default : null
-        }
-
-}))
+})
+module.exports = mongoose.model('menu',menuSchema);

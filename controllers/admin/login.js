@@ -62,7 +62,6 @@ module.exports = {
                                 req.session.username = userDoc.username;
                                 req.session.email = userDoc.email;
                                 req.session.activate = userDoc.activation.status;
-
                                 res.redirect(genhelper.siteURL('admin/dashboard'));
                             }
 

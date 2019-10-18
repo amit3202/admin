@@ -5,7 +5,7 @@ const config = {
 }
 
 const systemConfig = {
-    SITEURL : 'http://localhost:'+config.PORT,
+    SITEURL : 'http://localhost:'+config.PORT+"/",
     CRYPTSECRET : 'qwertyuiop' 
 }
 

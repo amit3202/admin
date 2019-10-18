@@ -3,19 +3,19 @@ const dashboard = {
 
     index : (req,res,next)=>{
 
-        menu.save({
+        // menu.save({
 
-        title  : 'Dashboard',
-        icon : 'fa-dash',
-        //parent : ,
-        status : 'active'
+        // title  : 'Dashboard',
+        // icon : 'fa-dash',
+        // //parent : ,
+        // status : 'active'
         
 
-        }).exec((err,result)=>{
+        // }).exec((err,result)=>{
 
-            console.log(err,result)
+        //     console.log(err,result)
 
-        })
+        // })
 
          res.render('admin/dashboard',{layout : 'layouts/admin/adminDefaultLayout'})   
 

@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended : true})); // Support URL encoded Bodie
 
 //Initialise session //
 const initSession = require('./session/session');
-initSession(app);
+initSession(app,db);
 
 // initialise Passport //
 const initPassport = require('./passport/passport');

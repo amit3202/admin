@@ -8,13 +8,20 @@ const menuSchema = Schema({
         default : null
     },
     parent : {
-        type : Schema.Types.ObjectId,
+        type : {
+            type : Number
+        },
+        parent_id : {
+            type : mongoose.Schema.Types.ObjectId
+        }
     },
     status : String,
+    order : Number,
     deleted_at : {
         type: Date,
         default : null
-    }
+    },
+    link : String
 
 })
 module.exports = mongoose.model('menu',menuSchema);

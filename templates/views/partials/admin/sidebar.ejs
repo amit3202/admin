@@ -1,50 +1,116 @@
-<div class="page-sidebar-wrapper">
-        <!-- BEGIN SIDEBAR -->
-        <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-        <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-        <div class="page-sidebar navbar-collapse collapse">
-            <!-- BEGIN SIDEBAR MENU -->
-            <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
-            <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
-            <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
-            <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-            <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
-            <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-            <ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px">
-                <!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
-                <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-                <li class="sidebar-toggler-wrapper hide">
-                    <div class="sidebar-toggler">
-                        <span></span>
-                    </div>
-                </li>
-                <!-- END SIDEBAR TOGGLER BUTTON -->
+<div  class="page-sidebar-wrapper">
+    <div  class="page-sidebar navbar-collapse collapse">
+            <ul id="menuRoot" class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" >
+                </ul>
+        </div>
+</div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/babel">
+        class Menu extends React.Component {
+
+            state = {
+                menuLoaded : false,
+                menuData : null
+            }
+
+            componentDidMount(){
+               
+                axios.get('http://localhost:3202/admin/menu/getmenu')
+                .then((response)=>{
+
+                    this.setState({
+                   menuLoaded : true,
+                   menuData : response.data
+               })
+                    
+                })
+
+              
+            }
+
+            render() {
+                return (<MenuGenerate menuLoaded={this.state.menuLoaded} menudata={this.state.menuData} />);
+            }
+        }
+
+        const MenuGenerate = (props)=>{
+            
+            if(props.menuLoaded){
+                var menudata = props.menudata;
                 
-                
-                <li class="heading">
-                    <h3 class="uppercase">Features</h3>
-                </li>
-                <li class="nav-item  ">
-                    <a href="javascript:;" class="nav-link nav-toggle">
-                        <i class="icon-diamond"></i>
-                        <span class="title">UI Features</span>
-                        <span class="arrow"></span>
+                if(menudata.length > 0){
+
+                    var menu = menudata.map((menu   )=>{
+                        return (<li className="nav-item  ">
+                    <a href="javascript:;" className="nav-link nav-toggle">
+                        <i className="icon-diamond"></i>
+                        <span className="title">{menu._id.title}</span>
+                        <span className="arrow"></span>
                     </a>
-                    <ul class="sub-menu">
-                        <li class="nav-item  ">
-                            <a href="ui_colors.html" class="nav-link ">
-                                <span class="title">Color Library</span>
+                    <Submenu submenuData = {menu.sbmenu} />
+                </li>)
+                    })
+
+                }
+                return (
+
+                                       
+                            
+                            
+                            <React.Fragment>
+                                <li className="sidebar-toggler-wrapper hide">
+                                    <div className="sidebar-toggler">
+                                        <span></span>
+                                    </div>
+                                </li>
+                                <li className="heading">
+                                    <h3 className="uppercase">Features</h3>
+                                </li>
+                                {menu}
+                                </React.Fragment>
+                        
+                        
+
+                );
+            }else{
+                return (<Loading/>)
+            }
+
+        }
+
+        const Aux = (props) => props.children;
+
+        const Loading = ()=>{
+            return (<div>Loading Menu Please Wait</div>)
+        }
+
+       const Submenu = (props)=>{
+        var submenu = props.submenuData;
+
+        if(submenu.length > 0){
+
+           return submenu.map((menu)=>{
+
+                return (<ul className="sub-menu">
+                        <li className="nav-item  ">
+                            <a href="ui_colors.html" className="nav-link ">
+                                <span className="title">{menu.title}</span>
                             </a>
                         </li>
                        
-                    </ul>
-                </li>
-                
-              
-                
-            </ul>
-            <!-- END SIDEBAR MENU -->
-            <!-- END SIDEBAR MENU -->
-        </div>
-        <!-- END SIDEBAR -->
-    </div>
+                    </ul>)
+
+            })
+            
+
+        }
+        return null;
+
+        }
+
+        ReactDOM.render(
+            <Menu />,
+            document.getElementById('menuRoot')
+        );
+
+        </script

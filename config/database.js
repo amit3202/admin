@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var {DBNAME} = require('../config/constant')
-mongoose.connect(`mongodb+srv://schools:amit3202@schools-fu21x.mongodb.net/${DBNAME}?retryWrites=true&w=majority`, 
+mongoose.connect(`mongodb+srv://schools:WRneZmna5JoEpref@schools-fu21x.mongodb.net/${DBNAME}?retryWrites=true&w=majority`, 
 {
     useNewUrlParser: true,
     useUnifiedTopology: true

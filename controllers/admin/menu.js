@@ -100,6 +100,40 @@ const ignoredFields = ['_id','__v'];
                 (err)?res.send({err:err}):res.send(result);
             })
 
+    },
+
+    add : (req,res,next)=>{
+
+            try {
+                
+                menu.find({'deleted_at':null,'parent.type':'1'}).select({"_id":1,"title":1}).sort({"title":1}).exec((err,result)=>{
+                    
+                    if(err){
+                        throw new Error(err);
+                    }else{
+                        var data = {
+                            menuData : result
+                        }
+                        res.render('admin/menu/add',{layout:'layouts/admin/adminDefaultLayout',data:data})
+    
+                    }
+
+                    })
+
+            } catch (error) {
+                error.httpStatusCode = 500;
+                next(error)
+            }
+
+         
+
+            
+    },
+    addMenu : (req,res,next)=>{
+
+        
+
     }
+
 
  }

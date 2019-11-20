@@ -1,6 +1,7 @@
 module.exports = (server)=>{
 
     server.use((err,req,res,next)=>{
+        
         let data = {
             '400' :{
                 statusCode : '400',

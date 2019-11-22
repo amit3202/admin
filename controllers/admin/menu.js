@@ -1,5 +1,6 @@
 var menu = require('../../models/admin/adminmenus');
 var dummy = require('mongoose-dummy');
+var mongoose = require('mongoose');
 const ignoredFields = ['_id','__v'];
  module.exports = {
 
@@ -130,8 +131,35 @@ const ignoredFields = ['_id','__v'];
             
     },
     addMenu : (req,res,next)=>{
+            
+            let menuData = {
+    
+                title  : req.input('title'),
+                icon : 'static',
+                status : '1',
+                parent : {
+                    type : parseInt(req.input('menuType')),
+                    parent_id : (req.input('menuType') == '0')? req.input('parent_id'): null
+                },
+                order : 45,
+                link : req.input('url')
+            }
+            console.log(menuData,req.input('parent_id'))
+             let menuObject = new menu(menuData);
+             
+             menuObject.save((err,result)=>{
 
-        
+                if(err){
+                    throw new Error(err);
+                }else{
+                    res.redirect('/admin/menu/add')
+                }
+
+
+             })
+
+
+            
 
     }
 

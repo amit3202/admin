@@ -1,4 +1,6 @@
-var welcome = require('../controllers/welcome');
+module.exports = (serverInstance)=>{
+
+  var welcome = require('../controllers/welcome');
 var express = require('express');
 var passport = require('passport');
 var router = express.Router();
@@ -27,7 +29,8 @@ router.get('/callback', function (req, res, next) {
     })(req, res, next);
   });
 
-module.exports = router;
+  return router
+};
 
 
 

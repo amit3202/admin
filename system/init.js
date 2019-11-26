@@ -4,7 +4,6 @@ const {PORT,VIEWENGINE} =  require('../config/constant');
 const db = require('../config/database');
 const path = require('path') 
 const expressLayouts = require('express-ejs-layouts');
-
 //Initialse System Middlewares //
 const systemMidlleware = require('./middleware/system');
 systemMidlleware(app);
@@ -38,28 +37,41 @@ const initialiseViewEngine = ()=>{
 }
 initialiseViewEngine();
 
-//import Routes //
-const initRoutes = require('../routers/route');
-initRoutes(app);
 
-// Error Handler
-const initErrorHandler = require('./error/error');
-initErrorHandler(app);
+
+//Initialise SocketChat
+
 
 const initServer = ()=>{
 
     //check port and initialise on another port (pending) //
 
-    app.listen(PORT,(err)=>{
+    new Promise((resolve,reject)=>{
 
-        if(err){
-            console.log('Error in server 11242 : ' +err)
-        }else{
-            console.log('Server runnning on Port '+PORT)
-        }
-    
+       var serverInstance = app.listen(PORT,(err)=>{
+
+            if(err){
+                console.log('Error in server 11242 : ' +err)
+            }else{
+                console.log('Server runnning on Port '+PORT)
+            }
+        
+        })
+        resolve({serverInstance})
+
+    }).then(({serverInstance})=>{
+
+        //import Routes //
+        const initRoutes = require('../routers/route');
+        initRoutes(app,serverInstance);
+
+        // Error Handler
+        const initErrorHandler = require('./error/error');
+        initErrorHandler(app);
+
     })
 
 }
+
 
 module.exports = initServer;

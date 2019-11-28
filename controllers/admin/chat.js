@@ -1,58 +1,64 @@
 var chatModel  =  require('../../models/admin/chat');
 var mongoose = require('mongoose');
+var async = require('async');
+var {getChatRoomId,getChatRoomUserDetail} = require('../../helper/general');
 var chatController ={
-    chat : (req,res)=>{
+    chat : async (req,res)=>{
         
+        var roomid = req.input('roomid');
+        var roomDetail = await getChatRoomUserDetail(roomid,req.session.userId);
+        var io =res.io;
 
-        var roomid = 'abc-123';//req.input('roomid')
-
+         io.on('connection',(socket)=>{
         
+            chatController.joinroom({socket,roomid},(err,rooms)=>{
 
-        res.io.on('connection',(socket)=>{
-        
-           chatController.joinroom({socket,roomid},(err,joined)=>{
+                 if(err){
 
-                if(err){
+                    console.log("error "+err)
 
-                }else{
-                    console.log('Room joined')
-                }
+                 }else{
+                     console.log('Room joined')
+                 }
 
-            });
-
-            // For sending Messages
-
-            chatController.sendMessage({socket});
-
+             });
             
-
+                chatController.sendMessage({socket,roomDetail});
             
             })
-        
-        res.render('admin/chat/panel',{layout:'layouts/admin/adminDefaultLayout'});
+        let layoutData = {
+            roomDetail : roomDetail
+        }
+            
+        res.render('admin/chat/panel',{layout:'layouts/admin/adminDefaultLayout',data:layoutData});
 
     },
 
     joinroom : ({socket,roomid},cb)=>{
 
-        socket.join(roomid,()=>{
+        try {
+            
+            socket.join(roomid,()=>{
+                let rooms =Object.keys(socket.rooms)
+                cb(null,rooms)
+                });
 
-            console.log('Room is joined')
-
-        });
+        } catch (error) {
+            cb(error,null)
+        }
 
     },
 
-    sendMessage : ({socket})=>{
+    sendMessage : ({socket,roomDetail})=>{
 
         socket.on('sendMessage',(data)=>{
-            
+
             if(data.msg.length > 0){
 
                 var chatData = new chatModel({
-                    roomid : 'abc-123',
-                    sender_id : mongoose.Types.ObjectId('5d8dba763fb2ce2d5fb07c18'),
-                    receiver_id : mongoose.Types.ObjectId('5d8dbcf293caee2eb511b9bc'),
+                    roomid : roomDetail.roomid,
+                    sender_id : roomDetail.senderId,
+                    receiver_id : roomDetail.receiverId,
                     message : data.msg
                 })
 
@@ -73,10 +79,8 @@ var chatController ={
     },
 
     newMessage : ({socket,chatData})=>{
-        console.log('data emmitffff')
         if(chatData){
-            console.log('data emmit')
-            socket.emit('newMessage',chatData)
+            socket.broadcast.in(chatData.roomid).emit('newMessage',chatData)
         }
         
 

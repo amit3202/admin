@@ -57,7 +57,7 @@ module.exports = {
 
                             }
                             else {
-
+                                req.session.userId = userDoc._id    
                                 req.session.personal = userDoc.personal;
                                 req.session.username = userDoc.username;
                                 req.session.email = userDoc.email;

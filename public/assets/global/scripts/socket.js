@@ -1,7 +1,7 @@
 $(function () {
 
-    var socket = io('ws://localhost:3202', {transports: ['polling']});
-
+    var socket = io('', {transports: ['polling', 'websocket']});
+    var roomid = $('#roomid').val();
     (function() {
         var cont = $('#chats');
         var list = $('.chats', cont);
@@ -19,18 +19,8 @@ $(function () {
 
             var time = new Date();
             var time_str = (time.getHours() + ':' + time.getMinutes());
-            var tpl = '';
-            tpl += '<li class="out">';
-            tpl += '<img class="avatar" alt="" src="' + Layout.getLayoutImgPath() + 'avatar1.jpg"/>';
-            tpl += '<div class="message">';
-            tpl += '<span class="arrow"></span>';
-            tpl += '<a href="#" class="name">Bob Nilson</a>&nbsp;';
-            tpl += '<span class="datetime">at ' + time_str + '</span>';
-            tpl += '<span class="body">';
-            tpl += text;
-            tpl += '</span>';
-            tpl += '</div>';
-            tpl += '</li>';
+
+            var tpl =  generateMessageTemplate('out',time_str,text);
 
             var msg = list.append(tpl);
             input.val("");
@@ -47,7 +37,7 @@ $(function () {
             cont.find('.scroller').slimScroll({
                 scrollTo: getLastPostPos()
             });
-            chatData = {msg : text}
+            chatData = {msg : text,roomid:roomid}
             socket.emit('sendMessage', chatData);
             
         }
@@ -70,22 +60,46 @@ $(function () {
         });
     })()
 
-    // hANdle new Upcomig message
 
-    socket.on('newMessage',(data)=>{
-        console.log('ffff')
-        console.log(data)
-    })
-  
-    // $('#chatSend').on('click',function(e){
-    //     socket.emit('chat message', $('#m').val());
-    //     $('#m').val('');
+     socket.on('newMessage', function(msg){
+        var cont = $('#chats');
+        var list = $('.chats', cont);
+        var time = new Date();
+        var time_str = (time.getHours() + ':' + time.getMinutes());
+        var tpl = generateMessageTemplate('in',time_str,msg.message)
+        list.append(tpl)
 
-    //     return false;
-    // });
+        var getLastPostPos = function() {
+            var height = 0;
+            cont.find("li.out, li.in").each(function() {
+                height = height + $(this).outerHeight();
+            });
 
-    // socket.on('chat message', function(msg){
-    //    $('#messages').append($('<li>').text(msg));
-    //    });
+            return height;
+        }
+
+        cont.find('.scroller').slimScroll({
+            scrollTo: getLastPostPos()
+        });
+        
+        });
 
 });
+
+function generateMessageTemplate(msgType,time_str,text){
+
+            
+            var tpl = '';
+            tpl += '<li class="'+msgType+'">';
+            tpl += '<img class="avatar" alt="" src="https://via.placeholder.com/350x150">';
+            tpl += '<div class="message">';
+            tpl += '<span class="arrow"></span>';
+            tpl += '<a href="#" class="name">Bob Nilson</a>&nbsp;';
+            tpl += '<span class="datetime">at ' + time_str + '</span>';
+            tpl += '<span class="body">';
+            tpl += text;
+            tpl += '</span>';
+            tpl += '</div>';
+            tpl += '</li>';
+            return tpl;
+}

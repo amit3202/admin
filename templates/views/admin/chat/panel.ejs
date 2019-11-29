@@ -35,25 +35,25 @@
           <div class="portlet-body" id="chats">
               <div class="scroller" style="height: 525px;" data-always-visible="1" data-rail-visible1="1">
                   <ul class="chats">
-                      <li class="in">
-                          <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
-                          <div class="message">
-                              <span class="arrow"> </span>
-                              <a href="javascript:;" class="name"> Richard Doe </a>
-                              <span class="datetime"> at 20:40 </span>
-                              <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                          </div>
-                      </li>
-                      <li class="out">
-                          <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar1.jpg" />
-                          <div class="message">
-                              <span class="arrow"> </span>
-                              <a href="javascript:;" class="name"> Bob Nilson </a>
-                              <span class="datetime"> at 20:54 </span>
-                              <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. sed diam nonummy nibh euismod tincidunt ut laoreet.
-                                  </span>
-                          </div>
-                      </li>
+                        <%= data.chatHistory.length %>
+                      <% data.chatHistory.forEach((chat)=>{ 
+                          %>
+
+                          <li class="in">
+                                <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
+                                <div class="message">
+                                    <span class="arrow"> </span>
+                                    <a href="javascript:;" class="name"> <%= chat.senderName%> </a>
+                                    <span class="datetime"> at 20:40 </span>
+                                    <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                                </div>
+                            </li>
+
+                          <%
+                      });
+                      %>
+                      
+                     
                   </ul>
               </div>
               <div class="chat-form">

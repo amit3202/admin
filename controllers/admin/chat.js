@@ -26,9 +26,99 @@ var chatController ={
                 chatController.sendMessage({socket,roomDetail});
             
             })
+
+            var chatHistory = null;
+            var chatt  = chatModel.aggregate([
+                
+                    {$match : {
+                        $and : [
+                            {deleted_at : null},
+                            {roomid : roomid}
+                        ]
+                    }},
+                    {$project : {
+                        roomid : 1,
+                        sender_id : 1,
+                        receiver_id : 1,
+                        created_at : {$dateToString: { format: "%Y-%m-%d at %H:%M", date: "$created_at" }},
+                        message : 1,
+                        msgType : {
+                            $cond : {
+                                if : {
+                                   $eq : [ '$sender_id', mongoose.Types.ObjectId(req.session.userId)]
+                                },
+                                then : 'out',
+                                else : 'in'
+                            }
+                        }
+
+
+                        
+
+
+                    }},
+                    {$sort : {
+                        created_at : 1
+                    }},
+                    {
+                        $lookup : {
+                            from : "users",
+                            localField : 'sender_id',
+                            foreignField : '_id',
+                            as : 'senderDetail'
+                        }
+                    },
+                    {
+                        $unwind : {
+                                path : '$senderDetail'
+                        }
+                    },
+                    {
+                        $lookup : {
+                            from : "users",
+                            localField : 'receiver_id',
+                            foreignField : '_id',
+                            as : 'receiverDetail'
+                        }
+                    },
+                    {
+                        $unwind : {
+                            path : "$receiverDetail"
+                        }
+                    },
+                    {
+                        $project : {
+                            roomid : 1,
+                            sender_id : 1,
+                            receiver_id : 1,
+                            created_at : 1,
+                            message : 1,
+                            msgType : 1,
+                            senderName : "$senderDetail.personal.fullname",
+                            receiverName : "$receiverDetail.personal.fullname"        
+                        }
+                    }
+                    
+            ]).exec((err,result)=>{
+
+                if(err){
+                    console.log(err)
+                }else{
+                    console.log('dd')
+                    chatHistory = result
+
+                }
+
+            })
+
+          
+
+
         let layoutData = {
-            roomDetail : roomDetail
+            roomDetail : roomDetail,
+            chatHistory : chatHistory
         }
+       
             
         res.render('admin/chat/panel',{layout:'layouts/admin/adminDefaultLayout',data:layoutData});
 

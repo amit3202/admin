@@ -60,7 +60,6 @@ $(function () {
         });
     })()
 
-
      socket.on('newMessage', function(msg){
         var cont = $('#chats');
         var list = $('.chats', cont);
@@ -81,8 +80,12 @@ $(function () {
         cont.find('.scroller').slimScroll({
             scrollTo: getLastPostPos()
         });
-        
+
+        socket.emit('readCurrent',{'msgId' : msg._id})
+
         });
+
+        socket.emit('readPending',"reading Unread Message")
 
 });
 

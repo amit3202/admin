@@ -35,22 +35,29 @@
           <div class="portlet-body" id="chats">
               <div class="scroller" style="height: 525px;" data-always-visible="1" data-rail-visible1="1">
                   <ul class="chats">
-                        <%= data.chatHistory.length %>
-                      <% data.chatHistory.forEach((chat)=>{ 
+                        
+                      <% 
+                      if(data.chatHistory != 'undefined'){
+
+                      
+                      data.chatHistory.forEach((chat)=>{ 
                           %>
 
-                          <li class="in">
+                          <li class="<%=chat.msgType%>">
                                 <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
                                 <div class="message">
                                     <span class="arrow"> </span>
                                     <a href="javascript:;" class="name"> <%= chat.senderName%> </a>
-                                    <span class="datetime"> at 20:40 </span>
-                                    <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                                    <span class="datetime"> <%= chat.created_at %> </span>
+                                    <span class="body"> <%= chat.message%> </span>
+                                   <% if(chat.msgType == 'out' && chat.read_at != null) {%> <span class="datetime"> Read At <%= chat.read_at %> </span>
+                                   <% } %>
                                 </div>
                             </li>
 
                           <%
                       });
+                    }
                       %>
                       
                      

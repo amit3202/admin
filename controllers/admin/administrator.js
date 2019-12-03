@@ -46,7 +46,7 @@ module.exports = {
                 
                 users.map((user)=>{
                     console.log(user)
-                    // let userArray = []
+                    // let userArray = [] 
 
                     // userArray.push('<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline"><input name="id[]" type="checkbox" class="checkboxes" value="1"/><span></span></label>');
                     // userArray.push(user.username)

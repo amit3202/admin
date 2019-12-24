@@ -6,6 +6,7 @@ module.exports = (serverInstance)=>{
     var socketInstance = require('../../middleware/chatInstance')(serverInstance);
     var adminstratorsController = require('../../controllers/admin/administrator')
     router.get('/administrator/list',[checkLogin,socketInstance],adminstratorsController.list);
-    router.get('/administrator/data',[checkLogin,socketInstance],adminstratorsController.dataTabledata)
+    router.post('/administrator/data',[checkLogin,socketInstance],adminstratorsController.dataTabledata)
+    router.get('/administrator/dummy',[checkLogin],adminstratorsController.generateDummyData)
     return router;
 }

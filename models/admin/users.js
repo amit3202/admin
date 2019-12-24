@@ -43,4 +43,9 @@ var userSchema = new Schema({
     
 });
 
+// userSchema.virtual('fullname').get(()=>{
+//     return `${this.firstName} ${this.lastName}`
+// })
+
+
 module.exports = mongoose.model('user',userSchema);

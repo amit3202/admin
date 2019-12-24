@@ -1,7 +1,19 @@
 var administrators = require('../../models/admin/users');
-
+var dummy = require('mongoose-dummy');
+const ignoredFields = ['_id','__v','deleted_at'];
 module.exports = {
-    list : async (req,res,next)=>{
+    
+    generateDummyData :(req,res)=>{
+
+        let randomObject = new administrators(dummy(administrators,{
+            ignore : ignoredFields
+        }))
+        randomObject.save((err,resp)=>{
+              res.send(resp);    
+        })
+        
+    }
+    ,list : async (req,res,next)=>{
 
         try {
             
@@ -37,29 +49,107 @@ module.exports = {
 
     },
     
-    dataTabledata : (req,res)=>{
+    dataTabledata :  (req,res,next)=>{
+        
+        try {
+            
+            async function queryBuilder() {
 
-        administrators.find({
-            deleted_at : null
-            }).limit(5).sort({'created_at' : 1}).exec((err,users)=>{
+            
+            var Query = administrators.find({
+                deleted_at : null
+                }).limit(5).sort({'created_at' : 1});
 
-                
-                users.map((user)=>{
-                    console.log(user)
-                    // let userArray = [] 
+            
+            var usertableData =  await new Promise((resolve,reject)=>{
 
-                    // userArray.push('<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline"><input name="id[]" type="checkbox" class="checkboxes" value="1"/><span></span></label>');
-                    // userArray.push(user.username)
-
-                    // return userArray;
-
+                Query.exec((err,users)=>{
+                        if(err){
+                            reject(err);
+                        }
+                        
+                       let usersData =  users.map((user)=>{
+                            let userArray = [] 
+                            userArray.push('<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline"><input name="id[]" type="checkbox" class="checkboxes" value="1"/><span></span></label>');
+                            userArray.push(user.username)
+                            userArray.push(user.email)
+                            userArray.push(user.personal.fullname)
+                            userArray.push(user.activation.status)
+                            userArray.push(user.created_at)
+                            userArray.push('online')
+                            userArray.push('view')
+        
+        
+                            return userArray;
+        
+                        })
+                        resolve(usersData)
+        
                 })
 
-        })
+            })
+            
+            var filteredCount = await new Promise((resolve,reject)=>{
 
+                Query.countDocuments((err,filteredCount)=>{
+                    
+                    if(err){
+                        reject(err)
+                    }else{
+                        resolve(filteredCount)
+                    }
 
+                })
+            })
 
-        res.send('{"data" : [[1,2,3,4,5,6,7],[1,2,3,4,5,6,7]],"draw":1,"recordsTotal":178,"recordsFiltered":178}')
+            var totalCount = await new Promise((resolve,reject)=>{
+                
+                administrators.find({
+                    deleted_at : null
+                    })
+                    .countDocuments((err,count)=>{
+                        
+                        if(err){
+                            reject(err);
+                        }
+                        
+                        resolve(count)
+        
+                })
+            })
+
+            return {
+                usertableData,
+                filteredCount,
+                totalCount
+            }
+        }
+
+             
+              //Promise.all([usertableData,totalCount,filteredCount])
+              queryBuilder().then((result)=>{
+              console.log(result)
+                var tableData = {
+                    data : result.usertableData,
+                    "draw":1,
+                    "recordsTotal":result.totalCount,
+                    "recordsFiltered":result.filteredCount    
+                }
+        
+        
+                res.send(tableData)
+                
+
+            }).catch((err)=>{
+                throw new Error(err);
+            })
+
+        } catch (error) {
+            res.send({'error':'something went wrong',err})
+            console.log(error)
+
+        }
+        
 
     }
 }

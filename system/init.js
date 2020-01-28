@@ -3,6 +3,10 @@ const app = new express();
 const {PORT,VIEWENGINE} =  require('../config/constant');
 const db = require('../config/database');
 const path = require('path') 
+
+//Initialising Logger //
+const initLogger = require('./logger');
+initLogger();
 const expressLayouts = require('express-ejs-layouts');
 //Initialse System Middlewares //
 const systemMidlleware = require('./middleware/system');
@@ -45,7 +49,7 @@ initialiseViewEngine();
 const initServer = ()=>{
 
     //check port and initialise on another port (pending) //
-
+    let log = require('log4js').getLogger('startup');
     new Promise((resolve,reject)=>{
 
        var serverInstance = app.listen(PORT,(err)=>{
@@ -53,6 +57,7 @@ const initServer = ()=>{
             if(err){
                 console.log('Error in server 11242 : ' +err)
             }else{
+                log.info('Express server listening on port '+PORT)
                 console.log('Server runnning on Port '+PORT)
             }
         
